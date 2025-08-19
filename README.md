@@ -1,66 +1,130 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📈 TradeJournal – Laravel & React SPA
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**TradeJournal** adalah aplikasi pencatatan dan analisis trading (forex, crypto, dll.) berbasis **full-stack modern**.  
+Backend dibangun dengan **Laravel 10 + Sanctum**, frontend menggunakan **React 18 + Inertia + Vite + Tailwind CSS**,  
+menghasilkan pengalaman **SPA (Single Page Application)** yang cepat, aman, dan responsif.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🧰 Kebutuhan Sistem
+| Komponen     | Versi / Catatan           |
+|--------------|---------------------------|
+| PHP          | ≥ 8.1                     |
+| Composer     | Versi terbaru             |
+| Node.js      | ≥ 18                      |
+| PostgreSQL   | (default di `.env`)       |
+| Git          | Untuk clone repository    |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Instalasi Lengkap (0 → Running)
 
-## Learning Laravel
+### 1. Clone & Masuk ke Folder
+```bash
+git clone https://github.com/yourname/trade-journal.git
+cd trade-journal
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. Install Dependensi
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**Backend (Laravel)**:
+```bash
+composer install
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Frontend (React, Tailwind, Vite, Axios, Inertia)**:
+```bash
+npm install
+```
 
-## Laravel Sponsors
+### 3. Konfigurasi Environment
+Salin file environment dan buat app key:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Edit file `.env` sesuai database lokal:
+```dotenv
+APP_URL=http://127.0.0.1:8000
 
-### Premium Partners
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=tradejournal
+DB_USERNAME=postgres
+DB_PASSWORD=password
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 4. Setup Database & Sanctum
+```bash
+php artisan migrate
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+```
+Opsional: isi data awal
+```bash
+php artisan db:seed
+```
 
-## Contributing
+### 5. Jalankan Server
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**Terminal 1 – Backend:**
+```bash
+php artisan serve
+# Akses di http://127.0.0.1:8000
+```
 
-## Code of Conduct
+**Terminal 2 – Frontend (Hot Module Reload):**
+```bash
+npm run dev
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Untuk build production:
+```bash
+npm run build
+```
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📂 Struktur Proyek Singkat
+```
+trade-journal/
+├── app/                  # Logika Laravel
+├── resources/js/
+│   ├── Pages/            # Halaman React (Inertia)
+│   ├── Components/       # Komponen React reusable
+│   └── app.jsx           # Entry point React
+├── routes/               # API & web routes (Inertia)
+├── tailwind.config.js    # Konfigurasi Tailwind CSS
+└── vite.config.js        # Konfigurasi Vite
+```
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🧪 Skrip & Workflow Development
+
+| Tujuan               | Perintah                |
+|----------------------|------------------------|
+| Dev server (HMR)     | `npm run dev`           |
+| Build production     | `npm run build`         |
+| Lint PHP             | `./vendor/bin/pint`     |
+| Jalankan test        | `php artisan test`      |
+
+---
+
+## 📦 Teknologi yang Digunakan
+- **Laravel 10** – backend & REST API
+- **Laravel Sanctum** – autentikasi token
+- **React 18** – library UI
+- **Inertia** – bridge SPA tanpa API manual
+- **Vite** – bundler & HMR super cepat
+- **Tailwind CSS** – utility-first styling
+- **Axios** – komunikasi HTTP
+- **PostgreSQL** – database utama
+
+---
+
+## 📄 Lisensi
+MIT © 2025 – Bebas digunakan, dimodifikasi, dan didistribusikan.
+
+Selamat mencoba & semoga trading-nya profitable! 🚀
