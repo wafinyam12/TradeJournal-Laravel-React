@@ -5,9 +5,12 @@
     use Illuminate\Support\Facades\Route;
     use Inertia\Inertia;
 
+
     use App\Http\Controllers\JournalController;
     use App\Http\Controllers\TradeController;
     use App\Models\Journal;
+    use App\Http\Controllers\DashboardController;
+
 
     /*
     |--------------------------------------------------------------------------
@@ -29,10 +32,7 @@
         ]);
     });
 
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
-
+    Route::middleware(['auth', 'verified'])->get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::middleware('auth')->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -53,24 +53,5 @@
         Route::delete('trades/{trade}', [TradeController::class, 'destroy'])->name('trades.destroy');
     });
 
-    Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
-        return Inertia::render('Dashboard', [
-            'journals' => auth()->user()
-                ->journals()
-                ->withSum('trades as total_pl', 'profit_loss')
-                ->withCount(['trades as total_trades'])
-                ->withCount(['trades as win_trades' => fn($q) => $q->where('profit_loss', '>', 0)])
-                ->withAvg('trades as avg_rr', 'risk_reward')
-                ->get()
-                ->map(fn($j) => [
-                    'id'         => $j->id,
-                    'name'       => $j->name,
-                    'total_trades' => $j->total_trades,
-                    'win_rate'   => $j->total_trades ? round(($j->win_trades / $j->total_trades) * 100, 1) : 0,
-                    'total_pl'   => (float) $j->total_pl,
-                    'avg_rr'     => (float) round($j->avg_rr, 2),
-                ]),
-        ]);
-    })->name('dashboard');
 
     require __DIR__ . '/auth.php';

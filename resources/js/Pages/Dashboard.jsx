@@ -1,5 +1,7 @@
+// resources/js/Pages/Dashboard.jsx
+
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 
 export default function Dashboard({ auth, journals }) {
     return (
@@ -24,38 +26,44 @@ export default function Dashboard({ auth, journals }) {
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {journals.map((j) => (
-                                <div
+                                <Link
+                                    href={route('trades.index', j.id)}
                                     key={j.id}
-                                    className="bg-white shadow-sm sm:rounded-lg p-6"
+                                    className="block bg-white shadow-sm sm:rounded-lg p-6 hover:shadow-md transition"
                                 >
-                                    <h2 className="text-lg font-semibold text-gray-800 truncate">
-                                        {j.name}
-                                    </h2>
+                                    <h2 className="text-lg font-semibold text-gray-800 truncate">{j.name}</h2>
 
                                     <dl className="mt-4 space-y-2 text-sm text-gray-600">
                                         <div className="flex justify-between">
+                                            <dt>Balance Start</dt>
+                                            <dd>${j.balance_start.toLocaleString()}</dd>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <dt>Balance Now</dt>
+                                            <dd className={j.balance_now >= j.balance_start ? 'text-green-600' : 'text-red-600'}>
+                                                ${j.balance_now.toLocaleString()}
+                                            </dd>
+                                        </div>
+                                        <div className="flex justify-between">
                                             <dt>Trades</dt>
-                                            <dd className="font-medium">{j.total_trades}</dd>
+                                            <dd>{j.total_trades}</dd>
                                         </div>
                                         <div className="flex justify-between">
                                             <dt>Win Rate</dt>
-                                            <dd className="font-medium">{j.win_rate}%</dd>
+                                            <dd>{j.win_rate}%</dd>
                                         </div>
                                         <div className="flex justify-between">
-                                            <dt>Total P/L</dt>
-                                            <dd
-                                                className={`font-medium ${j.total_pl >= 0 ? 'text-green-600' : 'text-red-600'
-                                                    }`}
-                                            >
+                                            <dt>P/L</dt>
+                                            <dd className={j.total_pl >= 0 ? 'text-green-600' : 'text-red-600'}>
                                                 ${j.total_pl.toLocaleString()}
                                             </dd>
                                         </div>
                                         <div className="flex justify-between">
                                             <dt>Avg RR</dt>
-                                            <dd className="font-medium">{j.avg_rr}</dd>
+                                            <dd>{j.avg_rr}</dd>
                                         </div>
                                     </dl>
-                                </div>
+                                </Link>
                             ))}
                         </div>
                     )}
