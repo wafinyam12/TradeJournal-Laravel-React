@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { act, useState } from 'react';
 import Modal from '@/Components/Modal';
 import PrimaryButton from '@/Components/PrimaryButton';
 import SecondaryButton from '@/Components/SecondaryButton';
@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 // import Swal from 'sweetalert2';
 
 export default function TradeModal({ show, onClose, journalId, trade }) {
-  const { data, setData, post, processing, reset } = useForm({
+  const { data, setData, put, post, processing, reset } = useForm({
     journal_id: journalId,
     pair: trade?.pair || '',
     direction: trade?.direction || 'buy',
@@ -42,20 +42,19 @@ export default function TradeModal({ show, onClose, journalId, trade }) {
   function submit(e) {
     e.preventDefault();
 
-    const url = trade
-      ? route('trades.update', trade.id)
-      : route('trades.store');
-
-    const method = trade ? 'put' : 'post';
-
-    post(url, data, {
-      method,
-      forceFormData: true,
-      onSuccess: () => {
-        reset();
-        onClose();
-      },
-    });
+    if (trade) {
+      // update -> kirim PUT
+      put(route('trades.update', trade.id), {
+        preserveScroll: true,
+        onSuccess: () => { reset(); onClose(); },
+      });
+    } else {
+      // store -> kirim POST
+      post(route('trades.store'), {
+        preserveScroll: true,
+        onSuccess: () => { reset(); onClose(); },
+      });
+    }
   }
 
   return (

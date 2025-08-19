@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import TradeModal from '@/Components/TradeModal';
 import PrimaryButton from '@/Components/PrimaryButton';
+import TradeDetailModal from '@/Components/TradeDetailModal';
 import Swal from 'sweetalert2';
 import { router } from '@inertiajs/react';
 
@@ -13,6 +14,7 @@ const TV_SCRIPT_URL = 'https://s3.tradingview.com/tv.js';
 export default function Index({ auth, journal, trades, stats }) {
     const [showTradeModal, setShowTradeModal] = useState(false);
     const [editingTrade, setEditingTrade] = useState(null);
+    const [detailTrade, setDetailTrade] = useState(null);
 
     /* 1. Dropdown state */
     const [selectedSymbol, setSelectedSymbol] = useState('OANDA:XAUUSD');
@@ -89,6 +91,7 @@ export default function Index({ auth, journal, trades, stats }) {
     // re-render if journal pair changes
 
     return (
+
         <AuthenticatedLayout user={auth.user}>
             <Head title={`${journal.name} - Trades`} />
             <div className="py-12">
@@ -119,7 +122,7 @@ export default function Index({ auth, journal, trades, stats }) {
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
                         {/* NEW: pair selector */}
                         <div className="mb-4">
                             <label className="block text-sm font-medium mb-1">Chart symbol</label>
@@ -208,6 +211,17 @@ export default function Index({ auth, journal, trades, stats }) {
                                         >
                                             Delete
                                         </button>
+                                        <button
+                                            onClick={() => setDetailTrade(t)}
+                                            className="text-blue-600 hover:underline"
+                                        >
+                                            View
+                                        </button>
+                                        <TradeDetailModal
+                                            show={!!detailTrade}
+                                            onClose={() => setDetailTrade(null)}
+                                            trade={detailTrade}
+                                        />
                                     </td>
                                 </tr>
                             ))}
@@ -225,6 +239,8 @@ export default function Index({ auth, journal, trades, stats }) {
                 journalId={journal.id}
                 trade={editingTrade}
             />
+
         </AuthenticatedLayout>
+
     );
 }
